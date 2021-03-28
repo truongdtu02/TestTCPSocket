@@ -34,12 +34,17 @@ namespace Server
 
             int size = 16000;
             byte[] sendBuffer = new byte[size];
+            
+
             Random rand = new Random();
             for(int i = 0; i < size; i++)
             {
                 sendBuffer[i] = (byte)rand.Next();
             }
-
+            //initialize
+            sendBuffer[0] = 0xFF;
+            sendBuffer[1] = 0x00;
+            sendBuffer[2] = 0xFF;
 
             while (true)
             {

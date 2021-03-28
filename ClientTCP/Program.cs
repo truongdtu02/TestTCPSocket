@@ -68,10 +68,10 @@ namespace Client
                         {
                             delay++;
                         }
-                        if (length != 1600) LengthError++;
+                        if (length != 16000) LengthError++;
                         //if (frame % 3 == 0)
                         {
-                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2/10000, length);
+                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2/1000, length);
                         }
                     }
                     catch
