@@ -39,7 +39,7 @@ namespace Server
             Random rand = new Random();
             for(int i = 0; i < size; i++)
             {
-                sendBuffer[i] = (byte)rand.Next();
+                sendBuffer[i] = (byte)i;
             }
             //initialize
             sendBuffer[0] = 0xFF;
