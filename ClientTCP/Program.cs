@@ -38,7 +38,7 @@ namespace Client
             // lưu ý SocketType của Tcp là Stream 
             var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             double timepoint = 0, mark1, mark2;
-            int frame = 0, delay = 0;
+            int frame = 0, delay = 0, LengthError = 0;
             while (true)
             {
                 try
@@ -68,10 +68,10 @@ namespace Client
                         {
                             delay++;
                         }
-                        
+                        if (length != 1600) LengthError++;
                         if (frame % 3 == 0)
                         {
-                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, Length: {3}", frame, delay, (int)mark2/10000, length);
+                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2/10000, LengthError);
                         }
                     }
                     catch
