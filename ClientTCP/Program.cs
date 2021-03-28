@@ -45,6 +45,7 @@ namespace Client
                 {
                     // tạo kết nối tới Server
                     socket.Connect(serverEndpoint);
+                    socket.ReceiveBufferSize = size;
                     watch.Start();
                 }
                 catch (Exception ex)
@@ -70,7 +71,7 @@ namespace Client
                         
                         if (frame % 3 == 0)
                         {
-                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, Length: {3}", frame, delay, (int)timepoint, length);
+                            Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, Length: {3}", frame, delay, (int)mark2/10000, length);
                         }
                     }
                     catch

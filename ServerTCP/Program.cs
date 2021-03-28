@@ -52,6 +52,7 @@ namespace Server
                 const int frametime = 1000; //ms
                 int Frame = 0;
                 double timepoint = 0, marktime = 0, mark1, mark2;
+                socket.SendTimeout = 900;
                 while (true)
                 {
                     try
