@@ -48,11 +48,12 @@ namespace Server
                 Socket socket = listener.Accept();
                 Console.WriteLine($"Accepted connection from {socket.RemoteEndPoint}");
                 Stopwatch watch = new Stopwatch();
-                watch.Start();
+                
                 const int frametime = 1000; //ms
                 int Frame = 0;
                 double timepoint = 0, marktime = 0, mark1, mark2;
-                //socket.SendTimeout = 900;
+                socket.SendTimeout = 900;
+                watch.Start();
                 while (true)
                 {
                     try
@@ -64,7 +65,7 @@ namespace Server
                         marktime = Frame * frametime;
                         mark2 = watch.Elapsed.TotalMilliseconds;
                         timepoint = marktime - mark2;
-                        Console.WriteLine((int)(mark2 - mark1));
+                        Console.WriteLine("{0} , {1}", (int)(mark2 - mark1), timepoint);
                         if (timepoint > 0)
                         {
                             Thread.Sleep((int)timepoint);
