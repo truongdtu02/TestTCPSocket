@@ -36,7 +36,6 @@ namespace Server
             listener.Listen(10);
             Console.WriteLine($"Local socket bind to {localEndPoint}. Waiting for request ...");
 
-            
 
 
 
@@ -112,6 +111,7 @@ namespace Server
             {
                 sendNum[i] = (byte)i;
             }
+            sendNum[9] = (byte)111;
             while (true)
             {
                 _socketSend.Send(sendNum);
