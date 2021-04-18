@@ -45,14 +45,14 @@ namespace TestTCPSocket
                         Console.WriteLine($"Accepted connection from {socket.RemoteEndPoint}");
                         Thread thread = new Thread(() =>
                         {
-                            Listenning(socket);
+                            Sending(socket);
                         });
                         thread.Start();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    //Console.WriteLine(ex);
                 }          
             }       
             //// đóng kết nối và giải phóng tài nguyên
@@ -81,6 +81,36 @@ namespace TestTCPSocket
                 }                        
                 var text = Encoding.ASCII.GetString(receiveBuffer, 0, length);
                 Console.WriteLine(text);
+            }         
+        }
+
+        private static void Sending(Socket socket)
+        {
+            int size = 7000;
+            byte[] sendBuffer = new byte[size];
+            sendBuffer[0] = 0xFF; sendBuffer[1] = 0xFF;
+            socket.SendTimeout = 800;
+            int length = 1, tryTime = 0;
+            while (true)
+            {
+                try
+                {
+                    //send
+                    length = socket.Send(sendBuffer);
+                    //socket.SendTimeout = 500;
+                }
+                catch
+                {
+                    //socket.Close();
+                    //Console.WriteLine("Socket close!");
+                    //break;
+                    tryTime++;
+                    if (tryTime > 10) break;
+                }
+                //var text = Encoding.ASCII.GetString(receiveBuffer, 0, length);
+                //Console.WriteLine(text);
+                Thread.Sleep(1000);
+                Console.WriteLine("Try time {0}", tryTime);
             }
         }
     }
