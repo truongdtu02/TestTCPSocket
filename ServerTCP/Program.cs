@@ -107,8 +107,8 @@ namespace Server
             //sendPacketMP3(_socketSend, mp3_buff, mp3_buff.Length);
             //string hello = "hello";
             byte[] sendHello = Encoding.ASCII.GetBytes("hello");
-            byte[] sendNum = new byte[255];
-            for(int i = 0; i < 255; i++)
+            byte[] sendNum = new byte[50];
+            for(int i = 0; i < 50; i++)
             {
                 sendNum[i] = (byte)i;
             }
