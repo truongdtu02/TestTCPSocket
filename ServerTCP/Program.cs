@@ -114,7 +114,7 @@ namespace Server
             sendNum[9] = (byte)111;
             while (true)
             {
-                _socketSend.Send(sendNum);
+                _socketSend.Send(sendHello);
                 Thread.Sleep(2000);
             }
         }
