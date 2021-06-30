@@ -2,115 +2,51 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
-namespace TestTCPSocket
+namespace Server
 {
     internal class Program
     {
-        Thread receiveThread;
         private static void Main(string[] args)
         {
-            Console.Title = "Tcp Server";
+            Console.Title = "Udp Server";
 
             // giá trị Any của IPAddress tương ứng với Ip của tất cả các giao diện mạng trên máy
-            var localIp = IPAddress.Any;
-            // tiến trình server sẽ sử dụng cổng tcp 1308
-            var localPort = 1308;
+            var localIp = IPAddress.Loopback;
+            // tiến trình server sẽ sử dụng cổng 1308
+            var localPort = 11001;
             // biến này sẽ chứa "địa chỉ" của tiến trình server trên mạng
             var localEndPoint = new IPEndPoint(localIp, localPort);
-
-            // tcp sử dụng đồng thời hai socket: 
-            // một socket để chờ nghe kết nối, một socket để gửi/nhận dữ liệu
-            // socket listener này chỉ làm nhiệm vụ chờ kết nối từ Client
-            var listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            // yêu cầu hệ điều hành cho phép chiếm dụng cổng tcp 1308
+            // yêu cầu hệ điều hành cho phép chiếm dụng cổng 1308
             // server sẽ nghe trên tất cả các mạng mà máy tính này kết nối tới
-            // chỉ cần gói tin tcp đến cổng 1308, tiến trình server sẽ nhận được
-            listener.Bind(localEndPoint);
-            // bắt đầu lắng nghe chờ các gói tin tcp đến cổng 1308
-            listener.Listen(10);
+            // chỉ cần gói tin udp đến cổng 1308, tiến trình server sẽ nhận được
+
+            // một overload khác của hàm tạo Socket
+            // InterNetwork là họ địa chỉ dành cho IPv4
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Bind(localEndPoint);
             Console.WriteLine($"Local socket bind to {localEndPoint}. Waiting for request ...");
 
+            var size = 1024;
+            var receiveBuffer = new byte[size];
+
             while (true)
             {
-                // tcp đòi hỏi một socket thứ hai làm nhiệm vụ gửi/nhận dữ liệu
-                // socket này được tạo ra bởi lệnh Accept
-                Socket socket;
-                try
-                {
-                    socket = listener.Accept();
-                    if (socket.Connected)
-                    {
-                        Console.WriteLine($"Accepted connection from {socket.RemoteEndPoint}");
-                        Thread thread = new Thread(() =>
-                        {
-                            Sending(socket);
-                        });
-                        thread.Start();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine(ex);
-                }          
-            }       
-            //// đóng kết nối và giải phóng tài nguyên
-            //Console.WriteLine($"Closing connection from {socket.RemoteEndPoint}rn");
-            //socket.Close();
-        }
-
-        private static void Listenning(Socket socket){
-            int size = 1024;
-            byte[] receiveBuffer = new byte[size];
-            socket.ReceiveTimeout = 3000;
-            int length;
-            while (true)
-            {         
-                try
-                {
-                    // nhận dữ liệu vào buffer
-                    length = socket.Receive(receiveBuffer);
-                    socket.SendTimeout = 500;
-                }
-                catch
-                {
-                    socket.Close();
-                    Console.WriteLine("Socket close!");
-                    break;
-                }                        
+                // biến này về sau sẽ chứa địa chỉ của tiến trình client nào gửi gói tin tới
+                EndPoint remoteEndpoint = new IPEndPoint(IPAddress.Any, 0);
+                // khi nhận được gói tin nào sẽ lưu lại địa chỉ của tiến trình client
+                var length = socket.ReceiveFrom(receiveBuffer, ref remoteEndpoint);
                 var text = Encoding.ASCII.GetString(receiveBuffer, 0, length);
-                Console.WriteLine(text);
-            }         
-        }
+                Console.WriteLine($"Received from {remoteEndpoint}: {text}");
 
-        private static void Sending(Socket socket)
-        {
-            int size = 7000;
-            byte[] sendBuffer = new byte[size];
-            sendBuffer[0] = 0xFF; sendBuffer[1] = 0xFF;
-            socket.SendTimeout = 800;
-            int length = 1, tryTime = 0;
-            while (true)
-            {
-                try
-                {
-                    //send
-                    length = socket.Send(sendBuffer);
-                    //socket.SendTimeout = 500;
-                }
-                catch
-                {
-                    //socket.Close();
-                    //Console.WriteLine("Socket close!");
-                    //break;
-                    tryTime++;
-                    if (tryTime > 10) break;
-                }
-                //var text = Encoding.ASCII.GetString(receiveBuffer, 0, length);
-                //Console.WriteLine(text);
-                Thread.Sleep(1000);
-                Console.WriteLine("Try time {0}", tryTime);
+                // chuyển chuỗi thành dạng in hoa
+                var result = text.ToUpper();
+
+                var sendBuffer = Encoding.ASCII.GetBytes(result);
+                // gửi kết quả lại cho client
+                socket.SendTo(sendBuffer, remoteEndpoint);
+
+                Array.Clear(receiveBuffer, 0, size);
             }
         }
     }
