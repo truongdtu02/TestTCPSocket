@@ -115,7 +115,7 @@ namespace Server
             while (true)
             {
                 _socketSend.Send(sendHello);
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
             }
         }
 
