@@ -122,7 +122,7 @@ namespace TcpChatServer
                         //test
                         if (count > 0)
                         {
-                            for(int j = 0; j < 300; j++)
+                            for(int j = 0; j < 30; j++)
                             {
                                 session.SendAsync(sendBuff);
                             }

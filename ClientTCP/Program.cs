@@ -24,13 +24,13 @@ namespace Client
                 serverIP = IPAddress.Parse("45.118.145.137"); 
             }
 
-            int serverPort = 2000;
+            int serverPort = 1308;
 
             // đây là "địa chỉ" của tiến trình server trên mạng
             // mỗi endpoint chứa ip của host và port của tiến trình
             IPEndPoint serverEndpoint = new IPEndPoint(serverIP, serverPort);
 
-            int size = 7000; // kích thước của bộ đệm
+            int size = 10000; // kích thước của bộ đệm
             byte[] receiveBuffer = new byte[size]; // mảng byte làm bộ đệm            
 
             Stopwatch watch = new Stopwatch();
