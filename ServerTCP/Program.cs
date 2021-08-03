@@ -20,7 +20,7 @@ namespace Server
             // giá trị Any của IPAddress tương ứng với Ip của tất cả các giao diện mạng trên máy
             IPAddress localIp = IPAddress.Any;
             // tiến trình server sẽ sử dụng cổng tcp 1308
-            int localPort = 1308;
+            int localPort = 2000;
             // biến này sẽ chứa "địa chỉ" của tiến trình server trên mạng
             IPEndPoint localEndPoint = new IPEndPoint(localIp, localPort);
 
