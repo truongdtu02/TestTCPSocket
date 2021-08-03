@@ -113,39 +113,42 @@ namespace TcpChatServer
             // Perform text input
             for (; ; )
             {
+                int count = 0;
                 foreach (var session in server.ListClient.Values)
                 {
                     System.Buffer.BlockCopy(BitConverter.GetBytes(iMarktime), 0, sendBuff, 4, sizeof(int));
-
                     if (session.BytesSending == 0 && session.BytesPending == 0)
                     {
-                        session.SendAsync(sendBuff);
+                        //test
+                        if (count > 0)
+                        {
+                            for(int j = 0; j < 300; j++)
+                            {
+                                session.SendAsync(sendBuff);
+                            }
+                        }
+                        else
+                        {
+                            session.SendAsync(sendBuff);
+                        }
                     }
                     else
                     {
                         //missing
                         Console.Write(" + ");
                     }
+
+                    count++;
                 }
 
-
-                //if (server.ChatSession != null)
-                //{
-                //    if(!server.ChatSession.IsSending)
-                //    {
-                //        server.ChatSession.TcpSessionSendAssync(sendBuff);
-                //    }
-                //    else
-                //    {
-                //        //missing
-                //        Console.Write(" + ");
-                //    }
-                //}
-                //server.Multicast(line);
                 iMarktime++;
                 dMarkTime = interval * iMarktime - sendWatch.ElapsedMilliseconds;
                 if ((int)dMarkTime > 0)
                     Thread.Sleep((int)dMarkTime);
+                else
+                {
+                    Console.Write(" - ");
+                }
             }
 
             // Stop the server
