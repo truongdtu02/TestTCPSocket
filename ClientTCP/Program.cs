@@ -24,7 +24,7 @@ namespace Client
                 serverIP = IPAddress.Parse("45.118.145.137"); 
             }
 
-            int serverPort = 1308;
+            int serverPort = 2000;
 
             // đây là "địa chỉ" của tiến trình server trên mạng
             // mỗi endpoint chứa ip của host và port của tiến trình
@@ -67,7 +67,7 @@ namespace Client
                             //if (length != 7000 && receiveBuffer[0] != 0xFF && receiveBuffer[1] != 0xFF) LengthError++;
                             //if (frame % 3 == 0)
                             {
-                                Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2 / 1000, length);
+                                //Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2 / 1000, length);
                             }
                         }
                         catch
