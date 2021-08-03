@@ -106,12 +106,10 @@ namespace Server
             //sendPacketMP3(_socketSend, mp3_buff, mp3_buff.Length);
             //string hello = "hello";
             byte[] sendHello = Encoding.ASCII.GetBytes("hello");
-            byte[] sendNum = new byte[255];
-            for(int i = 0; i < 255; i++)
-            {
-                sendNum[i] = (byte)i;
-            }
-            sendNum[9] = (byte)111;
+            byte[] sendNum = new byte[4000];
+            Random rand = new Random();
+            rand.NextBytes(sendNum);
+            
             while (true)
             {
                 _socketSend.Send(sendHello);
