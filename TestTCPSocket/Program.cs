@@ -48,7 +48,7 @@ namespace TcpChatServer
 
         protected override void OnEmpty()
         {
-            Console.WriteLine($"ID {Id}, Pending byte: {BytesPending}, Sending bytes: {BytesSending}, Sent bytes: {BytesSent}");
+            //Console.WriteLine($"ID {Id}, Pending byte: {BytesPending}, Sending bytes: {BytesSending}, Sent bytes: {BytesSent}");
         }
         public void TcpSessionSendAssync(byte[] sendBuff)
         {
@@ -113,7 +113,15 @@ namespace TcpChatServer
             {
                 foreach (var session in server.ListClient.Values)
                 {
-                    session.SendAsync(sendBuff);
+                    if(session.BytesSending == 0 && session.BytesPending == 0)
+                    {
+                        session.SendAsync(sendBuff);
+                    }
+                    else
+                    {
+                        //missing
+                        Console.Write(" + ");
+                    }
                 }
 
 
