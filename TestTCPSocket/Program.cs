@@ -19,8 +19,8 @@ namespace TcpChatServer
             Console.WriteLine($"Chat TCP session with Id {Id} connected!");
 
             // Send invite message
-            string message = "Hello from TCP chat! Please send a message or '!' to disconnect the client!";
-            SendAsync(message);
+            //string message = "Hello from TCP chat! Please send a message or '!' to disconnect the client!";
+            //SendAsync(message);
         }
 
         protected override void OnDisconnected()
@@ -103,6 +103,8 @@ namespace TcpChatServer
             Random rdByte = new Random();
             rdByte.NextBytes(sendBuff);
 
+            System.Buffer.BlockCopy(BitConverter.GetBytes(4000), 0, sendBuff, 0, sizeof(int));
+
             Stopwatch sendWatch = new Stopwatch();
             sendWatch.Start();
             long dMarkTime = 0;
@@ -113,7 +115,9 @@ namespace TcpChatServer
             {
                 foreach (var session in server.ListClient.Values)
                 {
-                    if(session.BytesSending == 0 && session.BytesPending == 0)
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(iMarktime), 0, sendBuff, 4, sizeof(int));
+
+                    if (session.BytesSending == 0 && session.BytesPending == 0)
                     {
                         session.SendAsync(sendBuff);
                     }
