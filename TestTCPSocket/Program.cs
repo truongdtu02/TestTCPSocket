@@ -99,7 +99,7 @@ namespace TcpChatServer
             Console.WriteLine("Done!");
 
             //send buffer
-            const int sendBuffSize = 40000;
+            const int sendBuffSize = 400000;
             byte[] sendBuff = new byte[sendBuffSize];
             Random rdByte = new Random();
             rdByte.NextBytes(sendBuff);
