@@ -99,17 +99,18 @@ namespace TcpChatServer
             Console.WriteLine("Done!");
 
             //send buffer
-            byte[] sendBuff = new byte[4000];
+            const int sendBuffSize = 40000;
+            byte[] sendBuff = new byte[sendBuffSize];
             Random rdByte = new Random();
             rdByte.NextBytes(sendBuff);
 
-            System.Buffer.BlockCopy(BitConverter.GetBytes(4000), 0, sendBuff, 0, sizeof(int));
+            System.Buffer.BlockCopy(BitConverter.GetBytes(sendBuffSize), 0, sendBuff, 0, sizeof(int));
 
             Stopwatch sendWatch = new Stopwatch();
             sendWatch.Start();
-            long dMarkTime = 0;
+            double dMarkTime = 0;
             int iMarktime = 0;
-            const long interval = 500;
+            const double interval = 500;
             // Perform text input
             for (; ; )
             {
@@ -120,17 +121,20 @@ namespace TcpChatServer
                     if (session.BytesSending == 0 && session.BytesPending == 0)
                     {
                         //test
-                        if (count > 0)
-                        {
-                            for(int j = 0; j < 30; j++)
-                            {
-                                session.SendAsync(sendBuff);
-                            }
-                        }
-                        else
-                        {
-                            session.SendAsync(sendBuff);
-                        }
+                        //if (count > 0)
+                        //{
+                        //    for(int j = 0; j < 30; j++)
+                        //    {
+                        //        session.SendAsync(sendBuff);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    session.SendAsync(sendBuff);
+                        //}
+
+                        session.SendAsync(sendBuff);
+
                     }
                     else
                     {
@@ -142,7 +146,8 @@ namespace TcpChatServer
                 }
 
                 iMarktime++;
-                dMarkTime = interval * iMarktime - sendWatch.ElapsedMilliseconds;
+                dMarkTime = interval * iMarktime - sendWatch.Elapsed.TotalMilliseconds;
+                //Console.WriteLine(sendWatch.Elapsed.TotalMilliseconds);
                 if ((int)dMarkTime > 0)
                     Thread.Sleep((int)dMarkTime);
                 else
