@@ -12,6 +12,7 @@ namespace TcpChatServer
     class ChatSession : TcpSession
     {
         public bool IsSending = false;
+        int totalBytes = 0;
         public ChatSession(TcpServer server) : base(server) { }
 
         protected override void OnConnected()
@@ -39,6 +40,8 @@ namespace TcpChatServer
             //// If the buffer starts with '!' the disconnect the current session
             //if (message == "!")
             //    Disconnect();
+            //totalBytes += size;
+            Console.WriteLine($"length {size} {DateTimeOffset.Now.ToUnixTimeSeconds()}");
         }
 
         protected override void OnError(SocketError error)
