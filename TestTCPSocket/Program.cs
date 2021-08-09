@@ -13,7 +13,7 @@ namespace TcpChatServer
     {
         public bool IsSending = false;
         int totalBytes = 0;
-        int countSend = 0;
+        int countRecv = 0;
         long ConnectedTime;
         public ChatSession(TcpServer server) : base(server) { }
 
@@ -156,7 +156,12 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             totalBytes += (int)size;
-            handle_recv_tcp_packet(buffer, (int)offset, (int)size);
+            //handle_recv_tcp_packet(buffer, (int)offset, (int)size);
+            if((totalBytes / 8000) > countRecv)
+            {
+                countRecv = totalBytes / 8000;
+                Console.Write($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            }
             //if (totalBytes == 8000)
             //{
             //    //Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
