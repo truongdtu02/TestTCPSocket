@@ -13,11 +13,13 @@ namespace TcpChatServer
     {
         public bool IsSending = false;
         int totalBytes = 0;
+        long ConnectedTime;
         public ChatSession(TcpServer server) : base(server) { }
 
         protected override void OnConnected()
         {
-            Console.WriteLine($"Chat TCP session with Id {Id} connected!");
+            ConnectedTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            Console.WriteLine($"{DateTimeOffset.Now} Chat TCP session with Id {Id} connected!");
 
             // Send invite message
             //string message = "Hello from TCP chat! Please send a message or '!' to disconnect the client!";
@@ -41,7 +43,7 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             //totalBytes += size;
-            Console.WriteLine($"length {size} {DateTimeOffset.Now.ToUnixTimeSeconds()}");
+            Console.WriteLine($"L {size} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
         }
 
         protected override void OnError(SocketError error)
