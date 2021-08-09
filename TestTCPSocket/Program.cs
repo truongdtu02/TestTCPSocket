@@ -32,6 +32,118 @@ namespace TcpChatServer
             Console.WriteLine($"Chat TCP session with Id {Id} disconnected!");
         }
 
+        const int TCpbuffLenght = 8000;
+        const int packetTCPHeaderLength = 4;
+        byte[] TCpbuff = new byte[TCpbuffLenght];
+        int TCpbuffOffset = 0;
+        int tcpPacketOfset;
+        int oldIdTCp = 0;
+        int missTCp = 0;
+
+        bool bIsPending = false;
+        bool bIgnore = false; //ignore when tcp packet length > mem
+        int remainData = 0;   //reamin data need to collect
+        //int totalByteLength = 0;
+        void handle_recv_tcp_packet(byte[] tcpPacket, int length)
+        {
+            //totalByteLength += length;
+            //static packetTCP* packetTCpheader = (packetTCP*)TCpbuff;
+            
+            tcpPacketOfset = 0;
+
+            while (length > 0)
+            {
+                //beggin get length of packet
+                if (!bIsPending)
+                {
+                    //barely occur, not enough data tp detect lenght of TCP packet
+                    if ((TCpbuffOffset + length) < packetTCPHeaderLength)
+                    {
+                        System.Buffer.BlockCopy(TCpbuff, TCpbuffOffset, tcpPacket, 0, length);
+                        length = 0;
+                        TCpbuffOffset += length;
+                    }
+                    //else enough data to detect
+                    else
+                    {
+                        //copy just enough
+                        int tmpOffset = packetTCPHeaderLength - TCpbuffOffset;
+                        System.Buffer.BlockCopy(tcpPacket, 0, TCpbuff, TCpbuffOffset, tmpOffset);
+                        TCpbuffOffset = packetTCPHeaderLength;
+                        length -= tmpOffset;
+                        tcpPacketOfset += tmpOffset;
+                        bIsPending = true;
+
+                        remainData = TCpbuffLenght - packetTCPHeaderLength;
+
+                        //not enough mem, so just ignore
+                        //if(packetTCpheader->length > TCpbuffLenght)
+                        //bIgnore = true;
+                        //else
+                        //  bIgnore = false;
+                    }
+                }
+                //got length, continue collect data
+                else
+                {
+                    //ignore save to buff
+                    if (bIgnore)
+                    {
+                        if (length < remainData)
+                        {
+                            remainData -= length;
+                            length = 0;
+                        }
+                        else
+                        {
+                            //done packet
+                            length -= remainData;
+                            tcpPacketOfset += remainData;
+                            bIsPending = false;
+                        }
+                    }
+                    //save to buff
+                    else
+                    {
+                        //not enough data to get
+                        if (length < remainData)
+                        {
+                            System.Buffer.BlockCopy(tcpPacket, tcpPacketOfset, TCpbuff, TCpbuffOffset, length);
+                            TCpbuffOffset += length;
+                            remainData -= length;
+                            length = 0; //handled all data in tcpPacket
+                        }
+                        else
+                        {
+                            //done packet
+                            System.Buffer.BlockCopy(tcpPacket, tcpPacketOfset, TCpbuff, TCpbuffOffset, remainData);
+                            length -= remainData;
+                            tcpPacketOfset += remainData;
+                            bIsPending = false;
+                        }
+                    }
+
+                    //that mean get done a packet
+                    if (!bIsPending)
+                    {
+                        TCpbuffOffset = 0; //reset
+                                           //check order
+                        int curId = BitConverter.ToInt32(TCpbuff, 0);
+                        if (curId > oldIdTCp)
+                        {
+                            missTCp += curId - oldIdTCp - 1;
+                            if(curId > (oldIdTCp + 1))
+                            {
+                                //Console.WriteLine($"Recv {curId} , Miss {missTCp}");
+                            }
+                            oldIdTCp = curId;
+                        }
+                        Console.WriteLine($"Recv {curId} , Miss {missTCp}");
+                    }
+                }
+            }
+        }
+
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
             //string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
