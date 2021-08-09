@@ -160,7 +160,7 @@ namespace TcpChatServer
             if((totalBytes / 8000) > countRecv)
             {
                 countRecv = totalBytes / 8000;
-                Console.Write($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+                Console.WriteLine($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
             }
             //if (totalBytes == 8000)
             //{
