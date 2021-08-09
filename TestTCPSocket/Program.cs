@@ -44,12 +44,12 @@ namespace TcpChatServer
         bool bIgnore = false; //ignore when tcp packet length > mem
         int remainData = 0;   //reamin data need to collect
         //int totalByteLength = 0;
-        void handle_recv_tcp_packet(byte[] tcpPacket, int length)
+        void handle_recv_tcp_packet(byte[] tcpPacket, int offset, int length)
         {
             //totalByteLength += length;
             //static packetTCP* packetTCpheader = (packetTCP*)TCpbuff;
             
-            tcpPacketOfset = 0;
+            tcpPacketOfset = offset;
 
             while (length > 0)
             {
@@ -59,7 +59,7 @@ namespace TcpChatServer
                     //barely occur, not enough data tp detect lenght of TCP packet
                     if ((TCpbuffOffset + length) < packetTCPHeaderLength)
                     {
-                        System.Buffer.BlockCopy(TCpbuff, TCpbuffOffset, tcpPacket, 0, length);
+                        System.Buffer.BlockCopy(TCpbuff, TCpbuffOffset, tcpPacket, tcpPacketOfset, length);
                         length = 0;
                         TCpbuffOffset += length;
                     }
@@ -68,7 +68,7 @@ namespace TcpChatServer
                     {
                         //copy just enough
                         int tmpOffset = packetTCPHeaderLength - TCpbuffOffset;
-                        System.Buffer.BlockCopy(tcpPacket, 0, TCpbuff, TCpbuffOffset, tmpOffset);
+                        System.Buffer.BlockCopy(tcpPacket, tcpPacketOfset, TCpbuff, TCpbuffOffset, tmpOffset);
                         TCpbuffOffset = packetTCPHeaderLength;
                         length -= tmpOffset;
                         tcpPacketOfset += tmpOffset;
@@ -156,17 +156,18 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             totalBytes += (int)size;
-            if (totalBytes == 8000)
-            {
-                //Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
-                Console.WriteLine("R8000 ");
-                totalBytes = 0;
-            }
-            else if(totalBytes > 8000)
-            {
-                Console.WriteLine("R > 8000 ");
-                totalBytes = 0;
-            }
+            handle_recv_tcp_packet(buffer, (int)offset, (int)size);
+            //if (totalBytes == 8000)
+            //{
+            //    //Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            //    Console.WriteLine("R8000 ");
+            //    totalBytes = 0;
+            //}
+            //else if(totalBytes > 8000)
+            //{
+            //    Console.WriteLine("R > 8000 ");
+            //    totalBytes = 0;
+            //}
             //Console.WriteLine($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
         }
 
