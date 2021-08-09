@@ -122,7 +122,7 @@ namespace TcpChatServer
             sendWatch.Start();
             double dMarkTime = 0;
             int iMarktime = 0;
-            const double interval = 500;
+            const double interval = 1000;
             // Perform text input
             int countTimeOut = 0;
             for (; ; )
