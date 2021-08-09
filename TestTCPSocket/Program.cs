@@ -138,7 +138,7 @@ namespace TcpChatServer
                             }
                             oldIdTCp = curId;
                         }
-                        Console.WriteLine($"Recv {curId} , Miss {missTCp}");
+                        Console.WriteLine($"Recv {curId} , Miss {missTCp} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime}");
                     }
                 }
             }
