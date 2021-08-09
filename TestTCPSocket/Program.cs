@@ -13,6 +13,7 @@ namespace TcpChatServer
     {
         public bool IsSending = false;
         int totalBytes = 0;
+        int countSend = 0;
         long ConnectedTime;
         public ChatSession(TcpServer server) : base(server) { }
 
@@ -43,11 +44,12 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             totalBytes += (int)size;
-            if (totalBytes == 8000)
-            {
-                Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
-                totalBytes = 0;
-            }
+            //if (totalBytes == 8000)
+            //{
+            //    Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            //    totalBytes = 0;
+            //}
+            Console.WriteLine($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
         }
 
         protected override void OnError(SocketError error)
@@ -57,6 +59,7 @@ namespace TcpChatServer
 
         protected override void OnEmpty()
         {
+            Console.WriteLine($"S {countSend} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
             //Console.WriteLine($"ID {Id}, Pending byte: {BytesPending}, Sending bytes: {BytesSending}, Sent bytes: {BytesSent}");
         }
         public void TcpSessionSendAssync(byte[] sendBuff)
