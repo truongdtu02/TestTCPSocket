@@ -115,6 +115,7 @@ namespace TcpChatServer
             int iMarktime = 0;
             const double interval = 500;
             // Perform text input
+            int countTimeOut = 0;
             for (; ; )
             {
                 int count = 0;
@@ -142,7 +143,8 @@ namespace TcpChatServer
                     else
                     {
                         //missing
-                        Console.Write(" + ");
+                        countTimeOut++;
+                        Console.Write(" + {0} ", countTimeOut);
                     }
 
                     count++;
