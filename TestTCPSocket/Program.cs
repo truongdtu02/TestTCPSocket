@@ -59,7 +59,7 @@ namespace TcpChatServer
 
         protected override void OnEmpty()
         {
-            Console.WriteLine($"S {countSend} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            Console.WriteLine($"S {++countSend} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
             //Console.WriteLine($"ID {Id}, Pending byte: {BytesPending}, Sending bytes: {BytesSending}, Sent bytes: {BytesSent}");
         }
         public void TcpSessionSendAssync(byte[] sendBuff)
