@@ -42,8 +42,12 @@ namespace TcpChatServer
             //// If the buffer starts with '!' the disconnect the current session
             //if (message == "!")
             //    Disconnect();
-            //totalBytes += size;
-            Console.Write($"L {size} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            totalBytes += (int)size;
+            if (totalBytes == 8000)
+            {
+                Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+                totalBytes = 0;
+            }
         }
 
         protected override void OnError(SocketError error)
