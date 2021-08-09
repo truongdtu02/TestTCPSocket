@@ -43,7 +43,7 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             //totalBytes += size;
-            Console.WriteLine($"L {size} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+            Console.Write($"L {size} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
         }
 
         protected override void OnError(SocketError error)
