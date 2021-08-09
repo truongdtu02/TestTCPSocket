@@ -44,11 +44,17 @@ namespace TcpChatServer
             //if (message == "!")
             //    Disconnect();
             totalBytes += (int)size;
-            //if (totalBytes == 8000)
-            //{
-            //    Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
-            //    totalBytes = 0;
-            //}
+            if (totalBytes == 8000)
+            {
+                //Console.Write($"R {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
+                Console.WriteLine("R8000 ");
+                totalBytes = 0;
+            }
+            else if(totalBytes > 8000)
+            {
+                Console.WriteLine("R > 8000 ");
+                totalBytes = 0;
+            }
             //Console.WriteLine($"R {totalBytes} {DateTimeOffset.Now.ToUnixTimeSeconds() - ConnectedTime} ");
         }
 
