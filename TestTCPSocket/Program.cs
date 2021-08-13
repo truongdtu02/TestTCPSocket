@@ -146,8 +146,8 @@ namespace TcpChatServer
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            //string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-            //Console.WriteLine("Incoming: " + message);
+            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            Console.WriteLine("Incoming: " + message);
 
             //// Multicast message to all connected sessions
             //Server.Multicast(message);

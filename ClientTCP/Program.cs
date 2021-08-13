@@ -40,6 +40,8 @@ namespace Client
             Socket socket;// = new Socket(SocketType.Stream, ProtocolType.Tcp);
             double timepoint = 0, mark1, mark2;
             int frame = 0, delay = 0, LengthError = 0;
+
+            byte[] sendBufferHello = Encoding.UTF8.GetBytes("hello");
             while (true)
             {
                 try
@@ -54,21 +56,23 @@ namespace Client
                     {
                         try
                         {
-                            // nhận mảng byte từ dịch vụ Tcp và lưu vào bộ đệm
-                            mark1 = watch.ElapsedMilliseconds;
-                            var length = socket.Receive(receiveBuffer);
-                            mark2 = watch.ElapsedMilliseconds;
-                            frame++;
-                            timepoint = mark2 - mark1;
-                            if (timepoint >= 1000)
-                            {
-                                delay++;
-                            }
-                            //if (length != 7000 && receiveBuffer[0] != 0xFF && receiveBuffer[1] != 0xFF) LengthError++;
-                            //if (frame % 3 == 0)
-                            {
-                                //Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2 / 1000, length);
-                            }
+                            //// nhận mảng byte từ dịch vụ Tcp và lưu vào bộ đệm
+                            //mark1 = watch.ElapsedMilliseconds;
+                            //var length = socket.Receive(receiveBuffer);
+                            //mark2 = watch.ElapsedMilliseconds;
+                            //frame++;
+                            //timepoint = mark2 - mark1;
+                            //if (timepoint >= 1000)
+                            //{
+                            //    delay++;
+                            //}
+                            ////if (length != 7000 && receiveBuffer[0] != 0xFF && receiveBuffer[1] != 0xFF) LengthError++;
+                            ////if (frame % 3 == 0)
+                            //{
+                            //    //Console.WriteLine("Frame: {0} , Delay: {1}, Time: {2}, LengthError: {3}", frame, delay, (int)mark2 / 1000, length);
+                            //}
+                            socket.Send(sendBufferHello);
+                            Thread.Sleep(1000);
                         }
                         catch
                         {
