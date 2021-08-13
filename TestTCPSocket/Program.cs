@@ -235,7 +235,7 @@ namespace TcpChatServer
             Console.WriteLine("Done!");
 
             //send buffer
-            const int sendBuffSize = 8000;
+            const int sendBuffSize = 10000;
             byte[] sendBuff = new byte[sendBuffSize];
             Random rdByte = new Random();
             rdByte.NextBytes(sendBuff);
@@ -270,7 +270,7 @@ namespace TcpChatServer
                         //    session.SendAsync(sendBuff);
                         //}
 
-                        session.SendAsync(sendBuff);
+                        //session.SendAsync(sendBuff);
 
                     }
                     else
